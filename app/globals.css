@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Light: Structured Bold ────────────────────────────────────────── */
+:root {
+  --clr-bg:             #FFF7FB;
+  --clr-surface:        #FFFFFF;
+  --clr-elevated:       #FFF0F6;
+  --clr-text:           #2D2D2D;
+  --clr-muted:          #6B6B6B;
+  --clr-accent:         #E04B52;   /* Coral — primary CTA */
+  --clr-accent2:        #8C7AE6;   /* Violet — gradient pair */
+  --clr-accent-sky:     #8FB7B8;   /* Teal */
+  --clr-accent-mint:    #5FE0B3;   /* Mint */
+  --clr-accent-yellow:  #F2B632;   /* Mustard */
+  --clr-accent-denim:   #3A6EA5;   /* Denim */
+  --clr-border:         #EAEAEA;
+}
+
+/* ─── Dark: Dark Luxury ─────────────────────────────────────────────── */
+.dark {
+  --clr-bg:             #0D0D0D;
+  --clr-surface:        #1A1A1A;
+  --clr-elevated:       #222222;
+  --clr-text:           #F5F5F5;
+  --clr-muted:          #B3B3B3;
+  --clr-accent:         #C6A85B;   /* Gold */
+  --clr-accent2:        #D1D1D6;   /* Silver */
+  --clr-accent-sky:     #3A6EA5;   /* Denim */
+  --clr-accent-mint:    #0F8A5F;   /* Emerald */
+  --clr-accent-yellow:  #C6A85B;   /* Gold */
+  --clr-accent-grape:   #3B1E3F;   /* Grape bg */
+  --clr-border:         #2A2A2A;
+}
+
+@theme inline {
+  --color-bg:            var(--clr-bg);
+  --color-surface:       var(--clr-surface);
+  --color-elevated:      var(--clr-elevated);
+  --color-text:          var(--clr-text);
+  --color-muted:         var(--clr-muted);
+  --color-accent:        var(--clr-accent);
+  --color-accent2:       var(--clr-accent2);
+  --color-accent-sky:    var(--clr-accent-sky);
+  --color-accent-mint:   var(--clr-accent-mint);
+  --color-accent-yellow: var(--clr-accent-yellow);
+  --color-border:        var(--clr-border);
+  --font-display: var(--font-cormorant, Georgia, serif);
+  --font-body: "Satoshi", system-ui, sans-serif;
+  --animate-blink: blink 1s step-end infinite;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.1; }
+  to   { opacity: 0.7; }
+}
+
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%       { transform: translateY(5px); opacity: 0.25; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes flash {
+  from { opacity: 0.85; }
+  to   { opacity: 0; }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.dark body {
+  background-color: #0D0D0D;
+}
+
+:root {
+  --hero-btn-bg: linear-gradient(135deg, #E04B52, #8C7AE6);
+}
+.dark {
+  --hero-btn-bg: linear-gradient(135deg, #C6A85B, #F2B632);
+}
+
+body {
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Section content sits above fixed star/grid backgrounds */
+main > * {
+  position: relative;
+  z-index: 1;
+}

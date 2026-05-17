@@ -137,20 +137,18 @@ export default function Hero() {
             Bachelor of Engineering (Honours) and Master of Engineering
           </p>
           <p className="font-body text-muted flex items-center gap-1.5" style={{ fontSize: 14, fontWeight: 400 }}>
-            <img
-              src="/UQ-300x300.png"
-              alt="UQ"
-              className="block dark:hidden"
-              style={{ width: 28, height: 28, mixBlendMode: "multiply", opacity: 0.85 }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
-            <img
-              src="/UQ-300x300.png"
-              alt="UQ"
-              className="hidden dark:block"
-              style={{ width: 28, height: 28, mixBlendMode: "screen", opacity: 0.65 }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
+            <span
+              className="inline-flex dark:hidden"
+              style={{ width: 40, height: 40, borderRadius: "50%", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.1)", padding: 4, alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+            >
+              <img src="/UQ-300x300.png" alt="UQ" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            </span>
+            <span
+              className="hidden dark:inline-flex"
+              style={{ width: 40, height: 40, borderRadius: "50%", background: "#1A1A1F", border: "1px solid rgba(255,255,255,0.1)", padding: 4, alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+            >
+              <img src="/UQ-300x300.png" alt="UQ" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            </span>
             @ The University of Queensland
           </p>
         </motion.div>

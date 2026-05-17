@@ -50,7 +50,7 @@ const PROJECTS: Project[] = [
   {
     id: 4,
     title: "CO2 Dragster",
-    description: "45g, 0.49s over 1m. Designed in Fusion 360, CNC machined from balsa wood. Placed top 5 in year group.",
+    description: "45g, 0.49s over 1m. Designed in Fusion 360. Placed top 5 in year group.",
     meta: "High School Projects",
     imageSrc: "/dragster.jpg",
   },
@@ -156,11 +156,13 @@ function ProjectModalContent({ id }: { id: number }) {
             </div>
           ))}
         </div>
-        <div className="grid md:grid-cols-2 gap-4 mb-10">
-          <div className="rounded-xl overflow-hidden bg-surface border border-border aspect-video">
-            <video src="/video1.mp4" controls muted playsInline className="w-full rounded-lg" poster="/frontview.jpg" />
+        <div className="mb-10">
+          <div className="rounded-xl overflow-hidden mb-4" style={{ background: "#000" }}>
+            <video controls muted playsInline style={{ width: "100%", height: 400, objectFit: "contain", background: "#000", display: "block" }}>
+              <source src="/video1.mp4" type="video/mp4" />
+            </video>
           </div>
-          <div className="rounded-xl overflow-hidden bg-surface border border-border aspect-video flex items-center justify-center p-4">
+          <div className="rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center p-4" style={{ height: 200 }}>
             <img src="/circuit_image.png" alt="Circuit diagram" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
         </div>
@@ -201,8 +203,8 @@ function ProjectModalContent({ id }: { id: number }) {
         <div className="grid md:grid-cols-3 gap-6 mb-10">
           {[
             { heading: "Design", body: "Full car designed in Fusion 360. Optimised for aerodynamics and minimum frontal area within competition constraints." },
-            { heading: "Manufacture", body: "CNC machined from balsa wood block. Hand-finished and sanded. Weighted and balanced to hit the 45g target." },
-            { heading: "Result", body: "0.49 seconds over 20m. Placed top 5 in year group. Outperformed heavier designs through aerodynamic efficiency." },
+            { heading: "Build", body: "Hand-finished and sanded from balsa wood. Weighted and balanced to hit the 45g target." },
+            { heading: "Result", body: "0.49 seconds over 1 metre. Placed top 5 in year group. Outperformed heavier designs through aerodynamic efficiency." },
           ].map((col) => (
             <div key={col.heading}>
               <h3 className="font-body font-semibold text-text text-xs uppercase tracking-wider mb-3">{col.heading}</h3>
@@ -211,14 +213,16 @@ function ProjectModalContent({ id }: { id: number }) {
           ))}
         </div>
         <div className="flex flex-wrap gap-2 mb-10">
-          {["Fusion 360", "CNC Machining", "Balsa Wood", "Aerodynamics", "CAD"].map((t) => (<TechPill key={t} label={t} />))}
+          {["Fusion 360", "Balsa Wood", "Aerodynamics", "CAD"].map((t) => (<TechPill key={t} label={t} />))}
         </div>
-        <div className="flex flex-wrap gap-3 mb-8">
-          <div className="w-40 h-28 rounded-xl overflow-hidden bg-surface border border-border">
-            <img src="/dragster.jpg" alt="CO2 Dragster" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+        <div className="mb-8">
+          <div className="rounded-xl overflow-hidden mb-3" style={{ background: "#000" }}>
+            <video controls muted playsInline style={{ width: "100%", height: 360, objectFit: "contain", background: "#000", display: "block" }}>
+              <source src="/dragster_video.mp4" type="video/mp4" />
+            </video>
           </div>
-          <div className="rounded-xl overflow-hidden bg-surface border border-border" style={{ width: 180, height: 112 }}>
-            <video src="/dragster_video.mp4" controls muted playsInline className="w-full rounded-lg" />
+          <div className="rounded-xl overflow-hidden" style={{ height: 200, background: "var(--dragster-img-bg, #f5f5f5)", padding: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <img src="/dragster.jpg" alt="CO2 Dragster" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", display: "block" }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
         </div>
       </div>
@@ -246,13 +250,11 @@ function ProjectModalContent({ id }: { id: number }) {
         <div className="flex flex-wrap gap-2 mb-10">
           {["OpenRocket", "B6-4 Motor", "Flight Dynamics", "Recovery Systems"].map((t) => (<TechPill key={t} label={t} />))}
         </div>
-        <div className="flex flex-wrap gap-3 mb-8">
-          <div className="w-40 h-28 rounded-xl overflow-hidden bg-surface border border-border">
-            <img src="/rocket.jpg" alt="Model Rocket" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-          </div>
-          <div className="rounded-xl overflow-hidden bg-surface border border-border" style={{ width: 180, height: 112 }}>
-            <video src="/rocket_video.mp4" controls muted playsInline className="w-full rounded-lg" />
-          </div>
+        <div className="mb-8">
+          <video controls muted playsInline style={{ width: "100%", height: 420, objectFit: "contain", borderRadius: 8, marginBottom: 8, background: "#000", display: "block" }}>
+            <source src="/rocket_video.mp4" type="video/mp4" />
+          </video>
+          <img src="/rocket.jpg" alt="Model Rocket" style={{ width: "100%", borderRadius: 8 }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         </div>
       </div>
     );
@@ -279,12 +281,12 @@ function ProjectModalContent({ id }: { id: number }) {
         <div className="flex flex-wrap gap-2 mb-10">
           {["Truss Design", "Balsa Wood", "Structural Analysis", "Load Testing"].map((t) => (<TechPill key={t} label={t} />))}
         </div>
-        <div className="flex flex-wrap gap-3">
-          {["/tower_side.jpg", "/tower_top.jpg"].map((img) => (
-            <div key={img} className="w-40 h-28 rounded-xl overflow-hidden bg-surface border border-border">
-              <img src={img} alt="Balsa Tower" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-            </div>
-          ))}
+        <p className="text-muted font-body text-sm leading-relaxed mb-8">
+          Structural analysis focused on moments at joints, static equilibrium, tension and compression forces throughout the truss members. Each joint was analysed to determine force distribution and optimise the structure for maximum load efficiency with minimum material.
+        </p>
+        <div style={{ display: "flex", gap: 12, overflowY: "auto" }}>
+          <img src="/tower_top.jpg" alt="Balsa Truss Tower Top View" style={{ flex: 1, height: 260, objectFit: "cover", borderRadius: 8, minWidth: 0 }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          <img src="/tower_side.jpg" alt="Balsa Truss Tower Side View" style={{ flex: 1, height: 260, objectFit: "cover", borderRadius: 8, minWidth: 0 }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         </div>
       </div>
     );
@@ -311,12 +313,9 @@ function ProjectModalContent({ id }: { id: number }) {
         <div className="flex flex-wrap gap-2 mb-10">
           {["LEGO Mindstorms EV3", "EV3-G", "Ultrasonic Sensor", "Colour Sensor", "Autonomous Navigation"].map((t) => (<TechPill key={t} label={t} />))}
         </div>
-        <div className="flex flex-wrap gap-3">
-          {["/rover_front.jpg", "/rover_side_.jpg"].map((img) => (
-            <div key={img} className="w-40 h-28 rounded-xl overflow-hidden bg-surface border border-border">
-              <img src={img} alt="EV3 Rover" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-            </div>
-          ))}
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          <img src="/rover_front.jpg" alt="Rover Front View" style={{ maxHeight: 200, width: "auto", objectFit: "contain", borderRadius: 8 }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          <img src="/rover_side_.jpg" alt="Rover Side View" style={{ maxHeight: 200, width: "auto", objectFit: "contain", borderRadius: 8 }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         </div>
       </div>
     );

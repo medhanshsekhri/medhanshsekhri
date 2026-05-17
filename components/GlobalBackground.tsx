@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const STAR_COUNT = 120;
+const STAR_COUNT = 80;
 const STAR_REPEL_RADIUS = 90;
 const STAR_MAX_PUSH = 35;
 

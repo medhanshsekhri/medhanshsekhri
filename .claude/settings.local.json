@@ -8,7 +8,9 @@
       "Bash(grep -rn \"#[0-9a-fA-F]\\\\{3,8\\\\}\" components/ --include=\"*.tsx\")",
       "Bash(dir components *)",
       "Bash(Get-Content \"C:\\\\Users\\\\Medhansh Sekhri\\\\.claude\\\\projects\\\\C--Users-Medhansh-Sekhri-Downloads-1100-medhansh-portfolio\\\\824b4178-5322-44ce-8d0d-338dc8fade11.jsonl\")",
-      "Bash(Select-Object -Last 200)"
+      "Bash(Select-Object -Last 200)",
+      "Bash(footer\")",
+      "Bash(git add *)"
     ]
   }
 }

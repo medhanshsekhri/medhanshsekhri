@@ -84,9 +84,7 @@ export default function Contact() {
               className="font-body"
               style={{
                 ...BTN,
-                background: isDark
-                  ? "linear-gradient(135deg, #C6A85B, #0F8A5F)"
-                  : "linear-gradient(135deg, #FF6F91, #B28DFF)",
+                background: isDark ? "#C6A85B" : "#E04B52",
                 color: "#ffffff",
               }}
               whileHover={{ scale: 1.04, filter: "brightness(1.08)" }}

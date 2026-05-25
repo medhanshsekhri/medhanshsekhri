@@ -13,8 +13,12 @@ type StarData = {
   duration: number;
 };
 
+const FIRST = "Medhansh";
+const LAST = " Sekhri.";
+
 export default function Hero() {
   const [stars, setStars] = useState<StarData[]>([]);
+  const [glowVisible, setGlowVisible] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
   const starElsRef = useRef<(HTMLDivElement | null)[]>([]);
   const starPosRef = useRef<{ cx: number; cy: number; tx: number; ty: number }[]>([]);
@@ -69,6 +73,13 @@ export default function Hero() {
     return () => { if (rafRef.current !== null) cancelAnimationFrame(rafRef.current); };
   }, [stars]);
 
+  // Glow appears after all letters have settled
+  // delay 0.5 + (FIRST.length + LAST.length - 1) * 0.055 + 0.5 ≈ 1.9s
+  useEffect(() => {
+    const timer = setTimeout(() => setGlowVisible(true), 1900);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <section
       id="hero"
@@ -106,16 +117,71 @@ export default function Hero() {
           Mechanical and Aerospace Engineering
         </motion.p>
 
-        <motion.h1
-          className="font-display font-semibold leading-[0.95] tracking-tight text-text mb-6"
-          style={{ fontSize: "clamp(3rem, 12vw, 9rem)" }}
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          Hi, I&apos;m Medhansh{" "}
-          <span className="text-[#E04B52] dark:text-[#C6A85B]">Sekhri.</span>
-        </motion.h1>
+        {/* Name with rippling letter cascade */}
+        <div className="relative mb-6">
+          {/* Hue glow that settles in behind the name */}
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{
+              inset: "-24px -48px",
+              background: "radial-gradient(ellipse 75% 55% at 50% 50%, var(--hero-name-glow), transparent 70%)",
+              filter: "blur(24px)",
+              zIndex: 0,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: glowVisible ? 1 : 0 }}
+            transition={{ duration: 2.2, ease: "easeOut" }}
+          />
+
+          <h1
+            className="relative font-display font-semibold leading-[0.95] tracking-tight text-text"
+            style={{ fontSize: "clamp(3rem, 12vw, 9rem)", zIndex: 1 }}
+          >
+            {/* "Hi, I'm " fades in as a unit */}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              {"Hi, I’m "}
+            </motion.span>
+
+            {/* "Medhansh" — each letter ripples in */}
+            {FIRST.split("").map((letter, i) => (
+              <motion.span
+                key={`f-${i}`}
+                initial={{ opacity: 0, y: "0.3em" }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.5 + i * 0.055,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                style={{ display: "inline-block" }}
+              >
+                {letter}
+              </motion.span>
+            ))}
+
+            {/* " Sekhri." — continues the ripple in accent colour */}
+            {LAST.split("").map((letter, i) => (
+              <motion.span
+                key={`l-${i}`}
+                className={letter.trim() !== "" ? "text-[#E04B52] dark:text-[#C6A85B]" : ""}
+                initial={{ opacity: 0, y: "0.3em" }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.5 + (FIRST.length + i) * 0.055,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                }}
+                style={{ display: "inline-block" }}
+              >
+                {letter === " " ? " " : letter}
+              </motion.span>
+            ))}
+          </h1>
+        </div>
 
         <motion.p
           className="text-muted font-body mb-6"
@@ -161,8 +227,7 @@ export default function Hero() {
         >
           <a
             href="#projects"
-            className="px-7 py-2.5 rounded-full text-sm font-body font-semibold text-white dark:text-[#0D0D0D] hover:opacity-90 transition-opacity"
-            style={{ background: "var(--hero-btn-bg, linear-gradient(135deg,#FF6F91,#B28DFF))" }}
+            className="px-7 py-2.5 rounded-full text-sm font-body font-semibold bg-accent text-white hover:opacity-90 transition-opacity"
           >
             See My Work
           </a>

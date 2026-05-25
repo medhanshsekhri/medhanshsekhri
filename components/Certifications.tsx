@@ -140,7 +140,7 @@ export default function Certifications() {
               <div className="p-8 h-full">
                 <div
                   className="absolute top-0 left-0 right-0 h-[3px] dark:hidden"
-                  style={{ background: "linear-gradient(90deg,#E04B52,#8C7AE6)" }}
+                  style={{ background: "#E04B52" }}
                 />
                 <div
                   className="absolute top-0 left-0 right-0 h-[3px] hidden dark:block"

@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import FocusRail from "@/components/FocusRail";
+import BentoProjects from "@/components/BentoProjects";
 import WhyMe from "@/components/WhyMe";
 import Certifications from "@/components/Certifications";
 import Vision from "@/components/Vision";
@@ -13,7 +13,7 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <FocusRail />
+        <BentoProjects />
         <WhyMe />
         <Certifications />
         <Vision />

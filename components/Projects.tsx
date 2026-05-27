@@ -1,38 +1,140 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Modal from "./Modal";
+
+// Frosted-glass surface (CSS approximation, not Apple Liquid Glass).
+// Styling lives in the .glass-panel class in globals.css.
+const GLASS_CLASS = "glass-panel";
+
+const TILT_SPRING = { stiffness: 180, damping: 18, mass: 0.4 };
+
+// Pointer-driven 3D tilt. Uses motion values (not state) so it never
+// re-renders the tree on mouse move. Collapses to static under reduced motion.
+function TiltCard({
+  onClick,
+  ariaLabel,
+  className,
+  style,
+  children,
+}: {
+  onClick: () => void;
+  ariaLabel: string;
+  className: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  const reduce = useReducedMotion();
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [7, -7]), TILT_SPRING);
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-7, 7]), TILT_SPRING);
+
+  function handleMove(e: React.MouseEvent<HTMLButtonElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    px.set((e.clientX - r.left) / r.width - 0.5);
+    py.set((e.clientY - r.top) / r.height - 0.5);
+  }
+  function reset() {
+    px.set(0);
+    py.set(0);
+  }
+
+  return (
+    <div style={{ perspective: 1100 }}>
+      <motion.button
+        onClick={onClick}
+        onMouseMove={reduce ? undefined : handleMove}
+        onMouseLeave={reset}
+        whileTap={{ scale: 0.985 }}
+        transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
+        style={{
+          ...style,
+          ...(reduce ? {} : { rotateX, rotateY }),
+        }}
+        className={className}
+        aria-label={ariaLabel}
+      >
+        {children}
+      </motion.button>
+    </div>
+  );
+}
 
 interface Project {
   id: number;
   title: string;
   meta: string;
+  year: string;
   imageSrc: string | null;
   noImageBg?: string;
+  rotate?: boolean;
+  aspect?: number; // displayed width/height, so the card box hugs the image
+  summary: string;
+  outcome: string;
+  tech: string[];
 }
 
 const PROJECTS: Project[] = [
-  { id: 2, title: "Autonomous Radar Scanner",             meta: "Personal Project",   imageSrc: "/frontview.jpg" },
-  { id: 1, title: "Flood-Resistant Station-Keeping House",meta: "University Project",  imageSrc: null },
-  { id: 3, title: "Autonomous Obstacle-Dodging Drone",    meta: "In Progress",         imageSrc: null, noImageBg: "#0a0f1e" },
-  { id: 4, title: "CO2 Dragster",                         meta: "High School",         imageSrc: "/dragster.jpg" },
-  { id: 5, title: "Model Rocket",                         meta: "High School",         imageSrc: "/rocket.jpg" },
-  { id: 6, title: "Balsa Truss Tower",                    meta: "High School",         imageSrc: "/tower_side.jpg" },
-  { id: 7, title: "Autonomous Warehouse Rover",           meta: "High School",         imageSrc: "/rover_front.jpg" },
+  {
+    id: 2, title: "Autonomous Radar Scanner", meta: "Personal", year: "2024",
+    imageSrc: "/frontview.jpg", aspect: 1.02,
+    summary: "Real-time 180° object detection built from scratch in C++, the sensing foundation of an autonomous drone.",
+    outcome: "Live visualisation · open-source on GitHub",
+    tech: ["C++", "Arduino", "HC-SR04", "Processing"],
+  },
+  {
+    id: 1, title: "Flood-Resistant Station-Keeping House", meta: "UQ · ENGG1100", year: "2025",
+    imageSrc: null, aspect: 1.6,
+    summary: "Team-led, flood-resistant house that holds position in rising water, delivered on a $170 budget.",
+    outcome: "Held position under simulated flood · under budget",
+    tech: ["Arduino", "C++", "L298N", "CAD"],
+  },
+  {
+    id: 3, title: "Autonomous Obstacle-Dodging Drone", meta: "Personal · WIP", year: "2025",
+    imageSrc: null, noImageBg: "#0a0f1e", aspect: 1.6,
+    summary: "A hovering drone that detects and dodges moving obstacles in real time, built on the radar work.",
+    outcome: "In active development",
+    tech: ["Flight Control", "PID", "Ultrasonics", "C++"],
+  },
+  {
+    id: 4, title: "CO2 Dragster", meta: "High School", year: "2023",
+    imageSrc: "/dragster.jpg", aspect: 0.75,
+    summary: "45g aerodynamic dragster designed in Fusion 360 and CNC-cut from balsa.",
+    outcome: "0.49s over 1m · top 5 in year group",
+    tech: ["Fusion 360", "Aerodynamics", "CAD"],
+  },
+  {
+    id: 5, title: "Model Rocket", meta: "High School", year: "2022",
+    imageSrc: "/rocket_upright.jpg", aspect: 0.75,
+    summary: "Model rocket simulated for stability in OpenRocket, then built and launched.",
+    outcome: "97m apogee · clean recovery",
+    tech: ["OpenRocket", "Flight Dynamics"],
+  },
+  {
+    id: 6, title: "Balsa Truss Tower", meta: "High School", year: "2022",
+    imageSrc: "/tower_side.jpg", aspect: 2.17,
+    summary: "Truss tower optimised to maximise load-to-weight ratio through geometry.",
+    outcome: "Predictable failure at the designed weak point",
+    tech: ["Structural Analysis", "Load Testing"],
+  },
+  {
+    id: 7, title: "Autonomous Warehouse Rover", meta: "High School", year: "2021",
+    imageSrc: "/rover_front.jpg", aspect: 2.17,
+    summary: "EV3 rover that navigates a warehouse-style obstacle course with no human input.",
+    outcome: "Completed the full course autonomously",
+    tech: ["LEGO EV3", "Ultrasonic", "Colour Sensor"],
+  },
 ];
-
-// Desktop mosaic positions — 3 col × 3 row grid
-// Row heights: 320px 200px 240px   Gap: 12px
-const DESKTOP: Record<number, { col: string; row: string }> = {
-  2: { col: "1",     row: "1 / 3" }, // Radar — tall, spans rows 1+2
-  1: { col: "2",     row: "1"     }, // House — top middle
-  3: { col: "3",     row: "1"     }, // Drone — top right
-  4: { col: "2 / 4", row: "2"     }, // Dragster — wide, spans cols 2+3
-  5: { col: "1",     row: "3"     }, // Rocket
-  6: { col: "2",     row: "3"     }, // Tower
-  7: { col: "3",     row: "3"     }, // Rover
-};
 
 function TechPill({ label }: { label: string }) {
   return (
@@ -96,7 +198,7 @@ function ProjectModalContent({ id }: { id: number }) {
       </div>
       <div className="mb-10">
         <div className="rounded-lg overflow-hidden mb-4 border border-border">
-          <video controls muted playsInline style={{width:"100%",height:380,objectFit:"contain",background:"#000",display:"block"}}>
+          <video controls muted playsInline style={{width:"100%",height:"auto",maxHeight:"70vh",objectFit:"contain",background:"#000",display:"block"}}>
             <source src="/video1.mp4" type="video/mp4" />
           </video>
         </div>
@@ -145,7 +247,7 @@ function ProjectModalContent({ id }: { id: number }) {
       <div className="flex flex-wrap gap-2 mb-10">{["Fusion 360","Balsa Wood","Aerodynamics","CAD"].map((t) => <TechPill key={t} label={t} />)}</div>
       <div className="mb-8">
         <div className="rounded-lg overflow-hidden mb-3 border border-border">
-          <video controls muted playsInline style={{width:"100%",height:340,objectFit:"contain",background:"#000",display:"block"}}>
+          <video controls muted playsInline style={{width:"100%",height:"auto",maxHeight:"70vh",objectFit:"contain",background:"#000",display:"block"}}>
             <source src="/dragster_video.mp4" type="video/mp4" />
           </video>
         </div>
@@ -175,7 +277,7 @@ function ProjectModalContent({ id }: { id: number }) {
       </div>
       <div className="flex flex-wrap gap-2 mb-10">{["OpenRocket","B6-4 Motor","Flight Dynamics","Recovery Systems"].map((t) => <TechPill key={t} label={t} />)}</div>
       <div className="mb-8">
-        <video controls muted playsInline style={{width:"100%",height:400,objectFit:"contain",borderRadius:8,marginBottom:8,background:"#000",display:"block"}}>
+        <video controls muted playsInline style={{width:"100%",height:"auto",maxHeight:"70vh",objectFit:"contain",borderRadius:8,marginBottom:8,background:"#000",display:"block"}}>
           <source src="/rocket_video.mp4" type="video/mp4" />
         </video>
         <img src="/rocket.jpg" alt="Model Rocket" style={{width:"100%",borderRadius:8}} onError={(e)=>{(e.target as HTMLImageElement).style.display="none";}} />
@@ -236,47 +338,39 @@ function ProjectModalContent({ id }: { id: number }) {
   return null;
 }
 
-function Tile({ project, onClick, className, style }: {
-  project: Project;
-  onClick: () => void;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`relative overflow-hidden group cursor-pointer focus:outline-none ${className ?? ""}`}
-      style={style}
-      aria-label={`Open ${project.title}`}
-    >
-      {/* Background */}
-      {project.imageSrc ? (
-        <img
-          src={project.imageSrc}
-          alt={project.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          draggable={false}
-          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-        />
-      ) : (
-        <div
-          className="absolute inset-0 border border-border"
-          style={{ background: project.noImageBg ?? "var(--clr-surface)" }}
-        />
-      )}
-
-      {/* Hover overlay — title + arrow fade in */}
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-300 flex items-end p-4">
-        <div className="translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out">
-          <p className="text-white/60 text-[10px] uppercase tracking-widest font-body mb-0.5">
-            {project.meta}
-          </p>
-          <p className="text-white font-display font-semibold leading-tight text-sm md:text-base">
-            {project.title} <span className="font-body font-normal">↗</span>
-          </p>
-        </div>
+function ProjectImage({ project }: { project: Project }) {
+  if (!project.imageSrc) {
+    return (
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          background:
+            project.noImageBg ??
+            "linear-gradient(160deg, var(--clr-elevated), var(--clr-surface))",
+        }}
+      >
+        <span className="font-display text-2xl text-white/40">
+          {project.meta.includes("WIP") ? "In progress" : "Photos coming soon"}
+        </span>
       </div>
-    </button>
+    );
+  }
+  return (
+    <img
+      src={project.imageSrc}
+      alt={project.title}
+      className="absolute inset-0 w-full h-full object-contain p-4"
+      draggable={false}
+      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+    />
+  );
+}
+
+function CardMeta({ project }: { project: Project }) {
+  return (
+    <h3 className="font-display font-semibold text-text leading-snug text-xl">
+      {project.title}
+    </h3>
   );
 }
 
@@ -284,66 +378,85 @@ export default function Projects() {
   const [modalId, setModalId] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
+  const [featured, ...rest] = PROJECTS;
 
   return (
-    <section id="projects" ref={sectionRef} className="py-24 px-6 md:px-16">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          className="mb-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+    <section
+      id="projects"
+      ref={sectionRef}
+      className="py-24 px-6 md:px-16"
+    >
+      <motion.div
+        className="mb-10 md:mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+      >
+        <h2
+          className="font-display font-semibold text-text"
+          style={{ fontSize: "clamp(3rem, 6vw, 5rem)", lineHeight: 1 }}
         >
-          <h2
-            className="font-display font-semibold text-text"
-            style={{ fontSize: "clamp(3rem, 6vw, 5rem)", lineHeight: 1 }}
+          Projects<span className="text-accent">.</span>
+        </h2>
+      </motion.div>
+
+      {/* Latest flagship */}
+      <motion.div
+        className="mb-5"
+        initial={{ opacity: 0, y: 24 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <TiltCard
+          onClick={() => setModalId(featured.id)}
+          ariaLabel={`Open ${featured.title}`}
+          className={`group w-full grid md:grid-cols-2 rounded-2xl overflow-hidden text-left transition-colors focus:outline-none hover:border-white/40 ${GLASS_CLASS}`}
+        >
+          <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[360px] overflow-hidden">
+            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
+              <ProjectImage project={featured} />
+            </div>
+            <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-bg/80 backdrop-blur text-[10px] uppercase tracking-widest font-body text-text">
+              Latest
+            </span>
+          </div>
+          <div className="p-7 md:p-10 flex flex-col justify-center">
+            <h3 className="font-display font-semibold text-text leading-tight text-3xl lg:text-4xl">
+              {featured.title}
+            </h3>
+            <span className="inline-flex items-center gap-2 text-sm font-body font-medium text-text mt-5">
+              Take a look
+              <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
+          </div>
+        </TiltCard>
+      </motion.div>
+
+      {/* Uniform grid: consistent cards, image centred in the glass frame */}
+      <motion.div
+        className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        initial={{ opacity: 0, y: 24 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.2 }}
+      >
+        {rest.map((p) => (
+          <TiltCard
+            key={p.id}
+            onClick={() => setModalId(p.id)}
+            ariaLabel={`Open ${p.title}`}
+            className={`group flex flex-col w-full text-left rounded-2xl overflow-hidden transition-colors focus:outline-none hover:border-white/40 ${GLASS_CLASS}`}
           >
-            Projects<span className="text-accent">.</span>
-          </h2>
-          <p className="text-muted font-body text-sm mt-2">Hover to preview. Click to explore.</p>
-        </motion.div>
-
-        {/* ── Desktop mosaic: 3 col × 3 row ── */}
-        <motion.div
-          className="hidden md:grid gap-3"
-          style={{
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gridTemplateRows: "320px 200px 240px",
-          }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-        >
-          {PROJECTS.map((project) => {
-            const pos = DESKTOP[project.id];
-            return (
-              <Tile
-                key={project.id}
-                project={project}
-                onClick={() => setModalId(project.id)}
-                style={{ gridColumn: pos.col, gridRow: pos.row }}
-              />
-            );
-          })}
-        </motion.div>
-
-        {/* ── Mobile: 2-col uniform grid ── */}
-        <motion.div
-          className="grid md:hidden grid-cols-2 gap-3"
-          style={{ gridAutoRows: "200px" }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-        >
-          {PROJECTS.map((project) => (
-            <Tile
-              key={project.id}
-              project={project}
-              onClick={() => setModalId(project.id)}
-            />
-          ))}
-        </motion.div>
-      </div>
+            <div className="relative aspect-[4/3] overflow-hidden">
+              <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
+                <ProjectImage project={p} />
+              </div>
+            </div>
+            <div className="p-5 border-t border-[var(--glass-border)]">
+              <CardMeta project={p} />
+            </div>
+          </TiltCard>
+        ))}
+      </motion.div>
 
       <Modal isOpen={modalId !== null} onClose={() => setModalId(null)}>
         {modalId !== null && <ProjectModalContent id={modalId} />}

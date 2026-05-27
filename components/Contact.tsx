@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { GlassEffect, GlassFilter } from "@/components/ui/liquid-glass";
 
 function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -41,6 +42,19 @@ const LINKS = [
   },
 ];
 
+const CREDENTIALS = [
+  {
+    category: "Remote Pilot, UAV Operations",
+    title: "Certificate III in Aviation",
+    body: "Certified remote pilot for UAV operations under CASA guidelines. Trained in airspace regulations, flight planning, and safe operation of unmanned aircraft systems.",
+  },
+  {
+    category: "In Progress",
+    title: "More Coming",
+    body: "Actively building toward additional certifications in embedded systems and aerospace. Watch this space.",
+  },
+];
+
 export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6 md:px-16">
@@ -55,27 +69,53 @@ export default function Contact() {
           <p className="font-body text-muted text-base leading-relaxed max-w-xl mb-12">
             Most engineers wait to be discovered. I don&apos;t. If you&apos;re looking for someone who
             builds before they&apos;re asked, learns before they&apos;re taught, and leads before
-            they&apos;re told — let&apos;s talk.
+            they&apos;re told. Let&apos;s talk.
           </p>
         </FadeUp>
 
         <FadeUp delay={0.1}>
-          <div className="flex flex-wrap gap-3">
+          <GlassFilter />
+          <div className="flex flex-wrap gap-4">
             {LINKS.map((link) => (
-              <a
+              <GlassEffect
                 key={link.label}
                 href={link.href}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noopener noreferrer" : undefined}
-                className={
-                  link.primary
-                    ? "px-6 py-2.5 bg-text text-bg text-sm font-body font-medium hover:opacity-75 transition-opacity rounded"
-                    : "px-6 py-2.5 border border-border text-text text-sm font-body hover:border-text transition-colors rounded"
-                }
+                external={link.external}
+                className="rounded-full px-7 py-3.5 hover:scale-[1.04]"
               >
-                {link.label}
-              </a>
+                <span className="text-sm font-body font-medium text-text whitespace-nowrap">
+                  {link.label}
+                </span>
+              </GlassEffect>
             ))}
+          </div>
+        </FadeUp>
+
+        {/* Credentials, folded into the same section */}
+        <FadeUp delay={0.15}>
+          <div className="mt-20">
+            <p className="text-muted text-xs uppercase tracking-[0.22em] font-body mb-6">
+              Credentials
+            </p>
+            <div className="border-t border-border">
+              {CREDENTIALS.map((item, i) => (
+                <FadeUp key={item.title} delay={0.05 + i * 0.06}>
+                  <div className="py-7 border-b border-border grid md:grid-cols-[200px_1fr] gap-3 md:gap-10">
+                    <p className="text-muted text-xs uppercase tracking-wider font-body leading-relaxed">
+                      {item.category}
+                    </p>
+                    <div>
+                      <h3 className="font-display font-semibold text-text text-xl md:text-2xl mb-2">
+                        {item.title}
+                      </h3>
+                      <p className="font-body text-sm text-muted leading-relaxed max-w-xl">
+                        {item.body}
+                      </p>
+                    </div>
+                  </div>
+                </FadeUp>
+              ))}
+            </div>
           </div>
         </FadeUp>
       </div>

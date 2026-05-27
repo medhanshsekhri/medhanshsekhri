@@ -13,7 +13,7 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   title: "Medhansh Sekhri | Mechanical & Aerospace Engineering",
   description:
-    "Portfolio of Medhansh Sekhri — ME/Aerospace student at UQ, Brisbane. Building autonomous systems from scratch.",
+    "Portfolio of Medhansh Sekhri, ME/Aerospace student at UQ, Brisbane. Building autonomous systems from scratch.",
 };
 
 export default function RootLayout({

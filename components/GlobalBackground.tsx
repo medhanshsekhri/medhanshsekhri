@@ -162,7 +162,7 @@ export default function GlobalBackground() {
 
   return (
     <>
-      {/* Canvas grid — light mode only */}
+      {/* Canvas grid: light mode only */}
       <div
         className="fixed inset-0 block dark:hidden pointer-events-none"
         style={{ zIndex: 0 }}
@@ -171,7 +171,7 @@ export default function GlobalBackground() {
         <canvas ref={canvasRef} className="absolute inset-0" />
       </div>
 
-      {/* Stars — dark mode only */}
+      {/* Stars: dark mode only */}
       <div
         ref={starContainerRef}
         className="fixed inset-0 hidden dark:block pointer-events-none overflow-hidden"

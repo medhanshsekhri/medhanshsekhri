@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 
 const FIRST = "Medhansh";
 const LAST = " Sekhri.";
@@ -52,16 +51,7 @@ export default function Hero() {
       className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-transparent"
     >
       <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl w-full">
-        <motion.p
-          className="text-xs font-body font-medium tracking-[0.22em] uppercase mb-6 text-muted"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          Mechanical and Aerospace Engineering
-        </motion.p>
-
-        {/* Name — each letter cascades in, then lifts on hover */}
+        {/* Name: letters cascade in, lift on hover; "Sekhri" in the brand accent */}
         <h1
           className="font-display font-semibold leading-[0.95] tracking-tight text-text mb-7"
           style={{ fontSize: "clamp(3rem, 12vw, 9rem)" }}
@@ -87,23 +77,29 @@ export default function Hero() {
             </motion.span>
           ))}
 
-          {LAST.split("").map((letter, i) => (
-            <motion.span
-              key={`l-${i}`}
-              className={letter.trim() !== "" ? "text-accent" : ""}
-              initial={{ opacity: 0, y: "0.25em" }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={
-                letter.trim() !== ""
-                  ? { y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }
-                  : {}
-              }
-              transition={{ duration: 0.45, delay: 0.45 + (FIRST.length + i) * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-              style={{ display: "inline-block", cursor: "default" }}
-            >
-              {letter === " " ? " " : letter}
-            </motion.span>
-          ))}
+          {LAST.split("").map((letter, i) => {
+            const isLetter = letter.trim() !== "";
+            return (
+              <motion.span
+                key={`l-${i}`}
+                initial={{ opacity: 0, y: "0.25em" }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={
+                  isLetter
+                    ? { y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }
+                    : {}
+                }
+                transition={{ duration: 0.45, delay: 0.45 + (FIRST.length + i) * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={{
+                  display: "inline-block",
+                  cursor: "default",
+                  color: isLetter ? "var(--clr-accent)" : undefined,
+                }}
+              >
+                {letter === " " ? " " : letter}
+              </motion.span>
+            );
+          })}
         </h1>
 
         <motion.p
@@ -174,16 +170,6 @@ export default function Hero() {
           </MagneticLink>
         </motion.div>
       </div>
-
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-muted"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.6 }}
-      >
-        <span className="text-[10px] font-body tracking-[0.2em] uppercase">Scroll</span>
-        <ChevronDown size={13} style={{ animation: "scroll-hint 1.8s ease-in-out infinite" }} />
-      </motion.div>
     </section>
   );
 }

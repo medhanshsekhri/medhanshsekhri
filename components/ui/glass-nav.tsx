@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 
 const OPTIONS = [
-  { label: "Projects", href: "#projects" },
+  { label: "Projects", href: "/projects" },
   { label: "About",    href: "#about"    },
   { label: "Contact",  href: "#contact"  },
 ];

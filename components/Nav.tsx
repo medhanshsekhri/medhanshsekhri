@@ -6,7 +6,7 @@ import { Sun, Moon, Menu, X } from "lucide-react";
 import GlassNav from "@/components/ui/glass-nav";
 
 const NAV_LINKS = [
-  { label: "Projects", href: "#projects" },
+  { label: "Projects", href: "/projects" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
@@ -39,11 +39,14 @@ export default function Nav() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-bg/90 backdrop-blur-md border-b border-border"
-            : "bg-transparent"
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 border-b transition-shadow duration-300"
+        style={{
+          background: "var(--glass-bg)",
+          backdropFilter: "blur(22px) saturate(180%)",
+          WebkitBackdropFilter: "blur(22px) saturate(180%)",
+          borderColor: "var(--glass-border)",
+          boxShadow: scrolled ? "0 8px 30px var(--glass-shadow)" : "none",
+        }}
       >
         <nav className="max-w-6xl mx-auto px-5 md:px-6 h-16 flex items-center">
           <a

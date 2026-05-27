@@ -9,13 +9,27 @@
   --clr-elevated:       #FFF0F6;
   --clr-text:           #2D2D2D;
   --clr-muted:          #6B6B6B;
-  --clr-accent:         #E04B52;   /* Coral — primary CTA */
-  --clr-accent2:        #8C7AE6;   /* Violet — gradient pair */
+  --clr-accent:         #E04B52;   /* Coral, primary CTA */
+  --clr-accent2:        #8C7AE6;   /* Violet, gradient pair */
   --clr-accent-sky:     #8FB7B8;   /* Teal */
   --clr-accent-mint:    #5FE0B3;   /* Mint */
   --clr-accent-yellow:  #F2B632;   /* Mustard */
   --clr-accent-denim:   #3A6EA5;   /* Denim */
   --clr-border:         #EAEAEA;
+
+  /* Hero name + tile palette (light): coral, peach, mustard, mint, pastel blue, purple */
+  --name-1: #FF6F5E;
+  --name-2: #FF9E5E;
+  --name-3: #F0B23A;
+  --name-4: #43D1A3;
+  --name-5: #7BAEE6;
+  --name-6: #9277E6;
+
+  /* Liquid-glass tint: lighter frost in light mode */
+  --glass-bg: rgba(255, 255, 255, 0.42);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-specular: rgba(255, 255, 255, 0.7);
+  --glass-shadow: rgba(0, 0, 0, 0.16);
 }
 
 /* ─── Dark: Dark Luxury ─────────────────────────────────────────────── */
@@ -32,6 +46,20 @@
   --clr-accent-yellow:  #C6A85B;   /* Gold */
   --clr-accent-grape:   #3B1E3F;   /* Grape bg */
   --clr-border:         #2A2A2A;
+
+  /* Hero name + tile palette (dark): maroon, copper, gold, champagne, emerald, silver */
+  --name-1: #C25A66;
+  --name-2: #CC8E5E;
+  --name-3: #D4AF61;
+  --name-4: #E3CBA0;
+  --name-5: #34C194;
+  --name-6: #CBD0D6;
+
+  /* Liquid-glass tint: subtle frost so light text stays readable on dark */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-specular: rgba(255, 255, 255, 0.35);
+  --glass-shadow: rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
@@ -103,4 +131,54 @@ main > * {
 
 .carousel-track { will-change: transform; }
 .polaroid-card  { will-change: transform; }
+
+/* Frosted glass panel (codepen-inspired): blur + saturation, soft border,
+   specular top edge. Theme-aware via the --glass-* tokens. */
+.glass-panel {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 8px 40px var(--glass-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.glass-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-specular), transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--clr-surface);
+  }
+}
+
+/* Skeleton shimmer for images while they decode */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--clr-elevated) 30%,
+    var(--clr-border) 50%,
+    var(--clr-elevated) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer { animation: none; }
+}
 

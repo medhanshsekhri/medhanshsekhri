@@ -1,5 +1,5 @@
-:HL["/_next/static/chunks/0.i9s8pg-7uqs.css","style"]
+:HL["/_next/static/chunks/138251n74q633.css","style"]
 :HL["/_next/static/media/01e4147cff8141ee-s.p.10ked.7w885.g.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap","style"]
 :HL["https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"98LiVTFZTBD6tuKmyE_l8"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"-6J5an8Sfdja82Mq_iQ9Y"}

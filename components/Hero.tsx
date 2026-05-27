@@ -1,10 +1,49 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 const FIRST = "Medhansh";
 const LAST = " Sekhri.";
+
+function MagneticLink({
+  href,
+  children,
+  className,
+  external,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className: string;
+  external?: boolean;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 350, damping: 22, mass: 0.5 });
+  const y = useSpring(my, { stiffness: 350, damping: 22, mass: 0.5 });
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className={className}
+      style={{ x, y }}
+      onMouseMove={(e) => {
+        const rect = ref.current?.getBoundingClientRect();
+        if (!rect) return;
+        mx.set((e.clientX - rect.left - rect.width / 2) * 0.28);
+        my.set((e.clientY - rect.top - rect.height / 2) * 0.28);
+      }}
+      onMouseLeave={() => { mx.set(0); my.set(0); }}
+    >
+      {children}
+    </motion.a>
+  );
+}
 
 export default function Hero() {
   return (
@@ -22,6 +61,7 @@ export default function Hero() {
           Mechanical and Aerospace Engineering
         </motion.p>
 
+        {/* Name — each letter cascades in, then lifts on hover */}
         <h1
           className="font-display font-semibold leading-[0.95] tracking-tight text-text mb-7"
           style={{ fontSize: "clamp(3rem, 12vw, 9rem)" }}
@@ -39,8 +79,9 @@ export default function Hero() {
               key={`f-${i}`}
               initial={{ opacity: 0, y: "0.25em" }}
               animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }}
               transition={{ duration: 0.45, delay: 0.45 + i * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-              style={{ display: "inline-block" }}
+              style={{ display: "inline-block", cursor: "default" }}
             >
               {letter}
             </motion.span>
@@ -52,10 +93,15 @@ export default function Hero() {
               className={letter.trim() !== "" ? "text-accent" : ""}
               initial={{ opacity: 0, y: "0.25em" }}
               animate={{ opacity: 1, y: 0 }}
+              whileHover={
+                letter.trim() !== ""
+                  ? { y: -8, transition: { type: "spring", stiffness: 400, damping: 15 } }
+                  : {}
+              }
               transition={{ duration: 0.45, delay: 0.45 + (FIRST.length + i) * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-              style={{ display: "inline-block" }}
+              style={{ display: "inline-block", cursor: "default" }}
             >
-              {letter === " " ? " " : letter}
+              {letter === " " ? " " : letter}
             </motion.span>
           ))}
         </h1>
@@ -77,7 +123,18 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.5 }}
         >
           <span
-            style={{ width: 26, height: 26, borderRadius: "50%", background: "var(--clr-surface)", border: "1px solid var(--clr-border)", padding: 3, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: "50%",
+              background: "var(--clr-surface)",
+              border: "1px solid var(--clr-border)",
+              padding: 3,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
           >
             <img
               src="/UQ-300x300.png"
@@ -89,32 +146,32 @@ export default function Hero() {
           <span>BEng(Hons) + MEng · University of Queensland</span>
         </motion.div>
 
+        {/* Magnetic buttons */}
         <motion.div
           className="flex flex-wrap items-center justify-center gap-3"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <a
+          <MagneticLink
             href="#projects"
             className="px-6 py-2.5 bg-text text-bg text-sm font-body font-medium hover:opacity-75 transition-opacity rounded"
           >
             See My Work
-          </a>
-          <a
+          </MagneticLink>
+          <MagneticLink
             href="#about"
             className="px-6 py-2.5 border border-border text-text text-sm font-body hover:border-text transition-colors rounded"
           >
             About
-          </a>
-          <a
+          </MagneticLink>
+          <MagneticLink
             href="/Medhansh_Sekhri_Engineering_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+            external
             className="px-6 py-2.5 border border-border text-text text-sm font-body hover:border-text transition-colors rounded"
           >
             Resume ↗
-          </a>
+          </MagneticLink>
         </motion.div>
       </div>
 

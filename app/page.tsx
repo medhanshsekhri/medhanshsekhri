@@ -1,9 +1,8 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import BentoProjects from "@/components/BentoProjects";
+import Projects from "@/components/Projects";
 import WhyMe from "@/components/WhyMe";
 import Certifications from "@/components/Certifications";
-import Vision from "@/components/Vision";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -13,10 +12,9 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <BentoProjects />
+        <Projects />
         <WhyMe />
         <Certifications />
-        <Vision />
         <Contact />
       </main>
       <Footer />
